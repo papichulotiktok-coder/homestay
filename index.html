@@ -21,7 +21,6 @@
       --green:      #1a6b3c;
     }
 
-    /* ── Reset ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -32,42 +31,35 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 30px 16px 60px;
+      padding: 16px 10px 60px;
     }
 
-    /* ── Toolbar (hide on print) ── */
+    /* ── Toolbar ── */
     .toolbar {
       display: flex;
-      gap: 12px;
-      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
       align-items: center;
+      width: 100%;
+      max-width: 820px;
     }
     .toolbar button {
       cursor: pointer;
       border: none;
       border-radius: 8px;
-      padding: 10px 22px;
+      padding: 10px 18px;
       font-family: inherit;
       font-size: 14px;
       font-weight: 600;
       letter-spacing: .4px;
       transition: all .2s;
     }
-    .btn-print {
-      background: var(--navy);
-      color: var(--white);
-    }
+    .btn-print { background: var(--navy); color: var(--white); }
     .btn-print:hover { background: var(--navy-mid); transform: translateY(-1px); }
-    .btn-reset {
-      background: var(--white);
-      color: var(--navy);
-      border: 1.5px solid var(--border) !important;
-    }
+    .btn-reset { background: var(--white); color: var(--navy); border: 1.5px solid var(--border) !important; }
     .btn-reset:hover { background: var(--light); }
-    .toolbar-note {
-      font-size: 12.5px;
-      color: var(--muted);
-    }
+    .toolbar-note { font-size: 12px; color: var(--muted); flex: 1 1 100%; }
 
     /* ── Invoice Sheet ── */
     .invoice {
@@ -86,42 +78,33 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 28px 36px 24px;
-      gap: 20px;
+      padding: 22px 24px 18px;
+      gap: 16px;
+      flex-wrap: wrap;
     }
-    .inv-header-left { flex: 1; }
+    .inv-header-left { flex: 1; min-width: 160px; }
     .inv-logo-title {
       font-family: 'Playfair Display', serif;
-      font-size: 24px;
+      font-size: clamp(18px, 4vw, 24px);
       font-weight: 700;
       letter-spacing: .5px;
       color: var(--white);
       line-height: 1.2;
     }
     .inv-logo-sub {
-      font-size: 11.5px;
+      font-size: 11px;
       color: var(--gold-light);
-      letter-spacing: 2.5px;
+      letter-spacing: 2px;
       text-transform: uppercase;
       margin-top: 3px;
     }
     .inv-header-divider {
-      width: 1px;
-      height: 60px;
+      width: 1px; height: 50px;
       background: rgba(255,255,255,.2);
     }
     .inv-header-right { text-align: right; }
-    .inv-address {
-      font-size: 12px;
-      color: #c8d0e8;
-      line-height: 1.7;
-    }
-    .inv-contacts {
-      font-size: 12px;
-      color: var(--gold-light);
-      margin-top: 6px;
-      line-height: 1.6;
-    }
+    .inv-address { font-size: 11.5px; color: #c8d0e8; line-height: 1.7; }
+    .inv-contacts { font-size: 11.5px; color: var(--gold-light); margin-top: 5px; line-height: 1.6; }
 
     /* ── Gold Stripe ── */
     .inv-stripe {
@@ -132,65 +115,73 @@
     /* ── Title Bar ── */
     .inv-title-bar {
       background: var(--light);
-      padding: 14px 36px;
+      padding: 12px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
       border-bottom: 1px solid var(--border);
     }
     .inv-title-bar h2 {
       font-family: 'Playfair Display', serif;
-      font-size: 18px;
-      color: var(--navy);
-      letter-spacing: .3px;
-    }
-    .inv-no {
-      font-size: 12.5px;
-      color: var(--muted);
-    }
-    .inv-no span {
-      font-weight: 700;
+      font-size: clamp(14px, 3.5vw, 18px);
       color: var(--navy);
     }
+    .inv-no { font-size: 12px; color: var(--muted); }
+    .inv-no span { font-weight: 700; color: var(--navy); }
 
     /* ── Body ── */
-    .inv-body { padding: 28px 36px; }
+    .inv-body { padding: 20px 16px; }
+    @media (min-width: 600px) { .inv-body { padding: 28px 36px; } }
 
     /* ── Guest Info ── */
     .guest-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 28px;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
       background: var(--light);
       border: 1px solid var(--border);
       border-radius: 6px;
-      padding: 18px 20px;
+      padding: 14px 14px;
     }
+    @media (min-width: 480px) {
+      .guest-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (min-width: 680px) {
+      .guest-grid { grid-template-columns: 1fr 1fr 1fr; padding: 18px 20px; }
+    }
+    .guest-field.full-row { grid-column: 1 / -1; }
+
     .guest-field label {
       display: block;
-      font-size: 10.5px;
+      font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 1.2px;
       color: var(--muted);
       margin-bottom: 5px;
       font-weight: 600;
     }
-    .guest-field input {
+    .guest-field input,
+    .guest-field textarea {
       width: 100%;
       border: 1px solid var(--border);
       border-radius: 4px;
-      padding: 7px 10px;
+      padding: 8px 10px;
       font-family: inherit;
       font-size: 13.5px;
       color: var(--text);
       background: var(--white);
       transition: border .15s;
     }
-    .guest-field input:focus {
-      outline: none;
-      border-color: var(--navy);
+    .guest-field textarea {
+      min-height: 62px;
+      resize: vertical;
+      line-height: 1.5;
     }
+    .guest-field input:focus,
+    .guest-field textarea:focus { outline: none; border-color: var(--navy); }
 
     /* ── Section Labels ── */
     .section-label {
@@ -204,109 +195,79 @@
       align-items: center;
       gap: 8px;
     }
-    .section-label::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* ── Table wrapper (mobile scroll) ── */
+    .table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 24px; }
 
     /* ── Table ── */
     .inv-table {
       width: 100%;
+      min-width: 540px;
       border-collapse: collapse;
-      margin-bottom: 24px;
-      font-size: 13.5px;
+      font-size: 13px;
     }
-    .inv-table thead tr {
-      background: var(--navy);
-      color: var(--white);
-    }
+    .inv-table thead tr { background: var(--navy); color: var(--white); }
     .inv-table thead th {
-      padding: 11px 12px;
+      padding: 10px 10px;
       text-align: left;
       font-weight: 600;
-      font-size: 11.5px;
+      font-size: 11px;
       letter-spacing: .5px;
+      white-space: nowrap;
     }
     .inv-table thead th:last-child,
     .inv-table thead th.col-harga,
     .inv-table thead th.col-total { text-align: right; }
-    .inv-table thead th.col-qty  { text-align: center; }
+    .inv-table thead th.col-qty { text-align: center; }
 
     .inv-table tbody tr { border-bottom: 1px solid var(--border); }
     .inv-table tbody tr:last-child { border-bottom: none; }
     .inv-table tbody tr:nth-child(even) { background: #f9fafc; }
-    .inv-table tbody td { padding: 10px 12px; vertical-align: middle; }
+    .inv-table tbody td { padding: 10px 10px; vertical-align: middle; }
 
-    /* ── Row: Kamar ── */
     .row-kamar td { background: #f0f3fa; }
-    .row-kamar td:first-child {
-      border-left: 3px solid var(--navy);
-    }
-
-    /* ── Row: Catering ── */
+    .row-kamar td:first-child { border-left: 3px solid var(--navy); }
     .row-catering td { background: #f7fbf4; }
-    .row-catering td:first-child {
-      border-left: 3px solid #2e8b57;
-    }
-
-    /* ── Row: Motor ── */
+    .row-catering td:first-child { border-left: 3px solid #2e8b57; }
     .row-motor td { background: #fffaf2; }
-    .row-motor td:first-child {
-      border-left: 3px solid var(--gold);
-    }
+    .row-motor td:first-child { border-left: 3px solid var(--gold); }
 
-    /* Desc cell */
     .cell-desc { font-weight: 600; color: var(--navy); }
-    .cell-desc small {
-      display: block;
-      font-weight: 400;
-      color: var(--muted);
-      font-size: 11.5px;
-      margin-top: 2px;
-    }
+    .cell-desc small { display: block; font-weight: 400; color: var(--muted); font-size: 11px; margin-top: 2px; }
+    .cell-right { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .cell-center { text-align: center; }
+    .cell-total { font-weight: 700; color: var(--navy); text-align: right; white-space: nowrap; }
 
-    /* Selects & inputs in table */
     select, .qty-input {
       font-family: inherit;
-      font-size: 13px;
+      font-size: 12.5px;
       border: 1px solid var(--border);
       border-radius: 4px;
-      padding: 4px 7px;
+      padding: 4px 6px;
       background: var(--white);
       color: var(--text);
       transition: border .15s;
     }
-    select:focus, .qty-input:focus {
-      outline: none;
-      border-color: var(--navy);
-    }
+    select:focus, .qty-input:focus { outline: none; border-color: var(--navy); }
     select { width: 100%; }
-    .qty-input {
-      width: 58px;
-      text-align: center;
-    }
-    .qty-sep { color: var(--muted); font-size: 11px; margin: 0 3px; }
-
-    /* harga & total cells */
-    .cell-right { text-align: right; font-variant-numeric: tabular-nums; }
-    .cell-center { text-align: center; }
-    .cell-total { font-weight: 700; color: var(--navy); text-align: right; }
-    .cell-zero { color: var(--muted); }
+    .qty-input { width: 52px; text-align: center; }
+    .qty-sep { color: var(--muted); font-size: 11px; margin: 0 2px; }
+    .qty-row { display: flex; align-items: center; gap: 3px; font-size: 12px; justify-content: center; flex-wrap: wrap; }
 
     /* ── Footer Grid ── */
     .inv-footer {
       display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 20px;
-      align-items: start;
+      grid-template-columns: 1fr;
+      gap: 16px;
       padding-top: 6px;
     }
+    @media (min-width: 560px) {
+      .inv-footer { grid-template-columns: 1fr auto; }
+    }
 
-    /* Keterangan */
     .keterangan-box label {
-      font-size: 10.5px;
+      font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 1.2px;
       color: var(--muted);
@@ -316,7 +277,7 @@
     }
     .keterangan-box textarea {
       width: 100%;
-      min-height: 90px;
+      min-height: 80px;
       border: 1px solid var(--border);
       border-radius: 4px;
       padding: 10px 12px;
@@ -329,15 +290,13 @@
     .keterangan-box textarea:focus { outline: none; border-color: var(--navy); }
 
     /* Total Box */
-    .total-box {
-      min-width: 230px;
-    }
+    .total-box { min-width: 210px; }
     .total-line {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 7px 14px;
-      font-size: 13.5px;
+      font-size: 13px;
       border-bottom: 1px solid var(--border);
     }
     .total-line:last-child { border-bottom: none; }
@@ -346,8 +305,8 @@
       color: var(--white);
       border-radius: 4px;
       margin-top: 6px;
-      padding: 11px 14px;
-      font-size: 15px;
+      padding: 10px 14px;
+      font-size: 14px;
       font-weight: 700;
     }
     .total-line.grand .tl-label { color: var(--gold-light); }
@@ -356,34 +315,73 @@
     /* ── Sign area ── */
     .sign-area {
       display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-top: 32px;
+      flex-direction: column;
+      gap: 24px;
+      margin-top: 28px;
       padding-top: 20px;
       border-top: 1px solid var(--border);
     }
+    @media (min-width: 560px) {
+      .sign-area { flex-direction: row; justify-content: space-between; align-items: flex-end; }
+    }
+
     .sign-place { font-size: 13px; color: var(--muted); }
     .sign-place strong { color: var(--text); }
 
-    .sign-block { text-align: center; }
-    .sign-title { font-size: 11.5px; color: var(--muted); margin-bottom: 6px; letter-spacing: .5px; }
+    /* ── Digital Signature ── */
+    .sign-block { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .sign-title { font-size: 11px; color: var(--muted); letter-spacing: .5px; }
     .sign-name-select {
-      font-family: inherit;
-      font-size: 13px;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 5px 10px;
-      background: var(--white);
-      color: var(--text);
-      margin-bottom: 10px;
+      font-family: inherit; font-size: 13px;
+      border: 1px solid var(--border); border-radius: 4px;
+      padding: 5px 10px; background: var(--white); color: var(--text);
     }
     .sign-name-select:focus { outline: none; border-color: var(--navy); }
-    .sign-line {
-      width: 160px;
-      border-bottom: 1px solid var(--text);
-      margin: 44px auto 4px;
+
+    .sig-canvas-wrap {
+      position: relative;
+      border: 1.5px dashed var(--border);
+      border-radius: 6px;
+      background: #fafbfe;
+      cursor: crosshair;
     }
-    .sign-name { font-size: 12.5px; font-weight: 700; color: var(--navy); min-height: 18px; }
+    .sig-canvas-wrap canvas {
+      display: block;
+      border-radius: 5px;
+      touch-action: none;
+    }
+    .sig-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: var(--border);
+      pointer-events: none;
+      user-select: none;
+    }
+    .sig-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+    .sig-btn {
+      font-family: inherit;
+      font-size: 11.5px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 4px 12px;
+      cursor: pointer;
+      background: var(--white);
+      color: var(--muted);
+      transition: all .15s;
+    }
+    .sig-btn:hover { background: var(--light); color: var(--text); }
+    .sig-btn.danger { border-color: #f5c6c2; color: var(--red); }
+    .sig-btn.danger:hover { background: #fef5f5; }
+    .sign-name { font-size: 12px; font-weight: 700; color: var(--navy); min-height: 18px; text-align: center; }
 
     /* ── Inv Bottom Note ── */
     .inv-note {
@@ -392,24 +390,19 @@
       text-align: center;
       font-size: 11.5px;
       letter-spacing: .5px;
-      padding: 10px 24px;
+      padding: 10px 20px;
       margin-top: 28px;
       border-radius: 3px;
     }
 
     /* ─────────── PRINT ─────────── */
     @media print {
-      body {
-        background: white;
-        padding: 0;
-        display: block;
-      }
-      .toolbar { display: none !important; }
-      .invoice {
-        box-shadow: none;
-        max-width: 100%;
-        border-radius: 0;
-      }
+      body { background: white; padding: 0; display: block; }
+      .toolbar, .sig-actions, .sign-name-select, .sig-placeholder { display: none !important; }
+      .invoice { box-shadow: none; max-width: 100%; border-radius: 0; }
+      .inv-body { padding: 16px 24px; }
+      .inv-header { padding: 16px 24px 14px; }
+      .inv-title-bar { padding: 8px 24px; }
       select, input, textarea {
         border: none !important;
         background: transparent !important;
@@ -417,10 +410,9 @@
         appearance: none;
         resize: none;
       }
-      .inv-body { padding: 20px 28px; }
-      .inv-header { padding: 20px 28px 18px; }
-      .inv-title-bar { padding: 10px 28px; }
-      .sign-name-select { border: none; }
+      .table-wrap { overflow: visible; }
+      .inv-table { min-width: unset; }
+      .sig-canvas-wrap { border: none; background: transparent; }
     }
   </style>
 </head>
@@ -468,10 +460,24 @@
     <!-- Guest Info -->
     <div class="section-label">Informasi Tamu</div>
     <div class="guest-grid">
+
+      <!-- Row 1: Nama + HP -->
       <div class="guest-field">
         <label>Nama Tamu</label>
-        <input type="text" id="g-nama" placeholder="Nama lengkap tamu" oninput="updateDate()"/>
+        <input type="text" id="g-nama" placeholder="Nama lengkap tamu"/>
       </div>
+      <div class="guest-field">
+        <label>No. HP / WhatsApp</label>
+        <input type="tel" id="g-hp" placeholder="Contoh: 0812-xxxx-xxxx"/>
+      </div>
+
+      <!-- Row 2: Alamat (full row) -->
+      <div class="guest-field full-row">
+        <label>Alamat Tamu</label>
+        <textarea id="g-alamat" placeholder="Alamat lengkap tamu (jalan, kota, provinsi)"></textarea>
+      </div>
+
+      <!-- Row 3: Check-in + Check-out -->
       <div class="guest-field">
         <label>Tanggal Check-in</label>
         <input type="date" id="g-checkin" onchange="calcDuration()"/>
@@ -480,17 +486,19 @@
         <label>Tanggal Check-out</label>
         <input type="date" id="g-checkout" onchange="calcDuration()"/>
       </div>
+
     </div>
 
     <!-- Rincian Table -->
     <div class="section-label">Rincian Biaya</div>
+    <div class="table-wrap">
     <table class="inv-table">
       <thead>
         <tr>
-          <th style="width:32%">Deskripsi</th>
-          <th class="col-qty" style="width:30%">Qty / Durasi</th>
-          <th class="col-harga" style="width:18%">Harga Satuan</th>
-          <th class="col-total" style="width:20%">Total Harga</th>
+          <th style="width:30%">Deskripsi</th>
+          <th class="col-qty" style="width:32%">Qty / Durasi</th>
+          <th class="col-harga" style="width:17%">Harga Satuan</th>
+          <th class="col-total" style="width:21%">Total Harga</th>
         </tr>
       </thead>
       <tbody>
@@ -505,13 +513,13 @@
             <div style="display:flex;flex-direction:column;gap:6px;align-items:center">
               <select id="kamar-paket" onchange="calcKamar()">
                 <option value="">— Pilih Paket —</option>
-                <option value="200000">@ Rp 200.000 (Include Sarapan)</option>
+                <option value="200000">@ Rp 200.000 (Inc. Sarapan)</option>
                 <option value="180000">@ Rp 180.000 (Tanpa Makan)</option>
               </select>
-              <div style="display:flex;align-items:center;gap:4px;font-size:12.5px">
+              <div class="qty-row">
                 <input type="number" class="qty-input" id="kamar-malam" min="0" value="0" oninput="calcKamar()"/>
                 <span class="qty-sep">malam</span>
-                <span style="margin:0 4px;color:var(--muted)">×</span>
+                <span style="margin:0 3px;color:var(--muted)">×</span>
                 <input type="number" class="qty-input" id="kamar-unit" min="0" value="1" oninput="calcKamar()"/>
                 <span class="qty-sep">kamar</span>
               </div>
@@ -528,10 +536,10 @@
             <small>@ Rp 25.000 / menu</small>
           </td>
           <td class="cell-center">
-            <div style="display:flex;align-items:center;gap:4px;font-size:12.5px;justify-content:center">
+            <div class="qty-row">
               <input type="number" class="qty-input" id="cat-hari" min="0" value="0" oninput="calcCatering()"/>
               <span class="qty-sep">hari</span>
-              <span style="margin:0 4px;color:var(--muted)">×</span>
+              <span style="margin:0 3px;color:var(--muted)">×</span>
               <input type="number" class="qty-input" id="cat-porsi" min="0" value="0" oninput="calcCatering()"/>
               <span class="qty-sep">porsi</span>
             </div>
@@ -547,10 +555,10 @@
             <small>@ Rp 85.000 / motor / hari</small>
           </td>
           <td class="cell-center">
-            <div style="display:flex;align-items:center;gap:4px;font-size:12.5px;justify-content:center">
+            <div class="qty-row">
               <input type="number" class="qty-input" id="mot-unit" min="0" value="0" oninput="calcMotor()"/>
               <span class="qty-sep">motor</span>
-              <span style="margin:0 4px;color:var(--muted)">×</span>
+              <span style="margin:0 3px;color:var(--muted)">×</span>
               <input type="number" class="qty-input" id="mot-hari" min="0" value="0" oninput="calcMotor()"/>
               <span class="qty-sep">hari</span>
             </div>
@@ -561,13 +569,14 @@
 
       </tbody>
     </table>
+    </div><!-- /table-wrap -->
 
     <!-- Footer Grid -->
     <div class="inv-footer">
       <!-- Keterangan -->
       <div class="keterangan-box">
         <label>Keterangan / Catatan</label>
-        <textarea id="keterangan" placeholder="Tambahkan catatan, keterangan khusus, atau informasi tambahan di sini…"></textarea>
+        <textarea id="keterangan" placeholder="Tambahkan catatan atau keterangan khusus di sini…"></textarea>
       </div>
 
       <!-- Total Box -->
@@ -593,9 +602,12 @@
 
     <!-- Sign Area -->
     <div class="sign-area">
+      <!-- Kiri: tanggal & lokasi -->
       <div class="sign-place">
         Gorontalo Utara, <strong id="sign-date"></strong>
       </div>
+
+      <!-- Kanan: tanda tangan digital -->
       <div class="sign-block">
         <div class="sign-title">Hormat Kami,</div>
         <select class="sign-name-select" id="sign-select" onchange="updateSigner()">
@@ -604,7 +616,16 @@
           <option value="Achmad Tojali">Achmad Tojali</option>
           <option value="Lutfia Inggriani">Lutfia Inggriani</option>
         </select>
-        <div class="sign-line"></div>
+
+        <!-- Canvas tanda tangan -->
+        <div class="sig-canvas-wrap" id="sigWrap">
+          <canvas id="sigCanvas" width="220" height="90"></canvas>
+          <div class="sig-placeholder" id="sigPlaceholder">Tanda tangan di sini ✍️</div>
+        </div>
+        <div class="sig-actions">
+          <button class="sig-btn danger" onclick="clearSig()">🗑 Hapus</button>
+        </div>
+
         <div class="sign-name" id="sign-name">&nbsp;</div>
       </div>
     </div>
@@ -636,18 +657,16 @@
 
   /* ── Kamar ── */
   function calcKamar() {
-    const paket  = parseFloat(document.getElementById('kamar-paket').value) || 0;
-    const malam  = val('kamar-malam');
-    const unit   = val('kamar-unit');
-    const total  = paket * malam * unit;
-    totKamar = total;
-
-    const sel = document.getElementById('kamar-paket');
-    const txt = sel.options[sel.selectedIndex].text;
+    const paket = parseFloat(document.getElementById('kamar-paket').value) || 0;
+    const malam = val('kamar-malam');
+    const unit  = val('kamar-unit');
+    totKamar    = paket * malam * unit;
+    const sel   = document.getElementById('kamar-paket');
+    const txt   = sel.options[sel.selectedIndex].text;
     document.getElementById('kamar-sub').textContent =
       paket ? txt.replace('@','').trim() : '— pilih paket di samping';
     document.getElementById('kamar-satuan').textContent = paket ? fmt(paket) : '—';
-    document.getElementById('kamar-total').textContent  = fmt(total);
+    document.getElementById('kamar-total').textContent  = fmt(totKamar);
     updateGrand();
   }
 
@@ -664,7 +683,7 @@
   function calcMotor() {
     const unit = val('mot-unit');
     const hari = val('mot-hari');
-    totMotor = unit * hari * 85000;
+    totMotor   = unit * hari * 85000;
     document.getElementById('mot-total').textContent = fmt(totMotor);
     updateGrand();
   }
@@ -691,16 +710,15 @@
   /* ── Date ── */
   function updateDate() {
     const d = new Date();
-    const opts = { day:'numeric', month:'long', year:'numeric' };
     document.getElementById('sign-date').textContent =
-      d.toLocaleDateString('id-ID', opts);
+      d.toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
   }
 
   /* ── Invoice number ── */
   function genInvNumber() {
     const d = new Date();
-    const yy = String(d.getFullYear()).slice(2);
-    const mm = String(d.getMonth()+1).padStart(2,'0');
+    const yy  = String(d.getFullYear()).slice(2);
+    const mm  = String(d.getMonth()+1).padStart(2,'0');
     const rnd = String(Math.floor(Math.random()*900)+100);
     document.getElementById('inv-num-val').textContent = `${yy}${mm}-${rnd}`;
   }
@@ -708,24 +726,104 @@
   /* ── Reset ── */
   function resetForm() {
     if (!confirm('Reset seluruh isian form?')) return;
-    document.getElementById('g-nama').value = '';
-    document.getElementById('g-checkin').value = '';
-    document.getElementById('g-checkout').value = '';
+    ['g-nama','g-hp','g-alamat','g-checkin','g-checkout','keterangan'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
     document.getElementById('kamar-paket').value = '';
     document.getElementById('kamar-malam').value = 0;
     document.getElementById('kamar-unit').value  = 1;
-    document.getElementById('cat-hari').value  = 0;
-    document.getElementById('cat-porsi').value = 0;
-    document.getElementById('mot-unit').value = 0;
-    document.getElementById('mot-hari').value = 0;
-    document.getElementById('keterangan').value = '';
+    document.getElementById('cat-hari').value    = 0;
+    document.getElementById('cat-porsi').value   = 0;
+    document.getElementById('mot-unit').value    = 0;
+    document.getElementById('mot-hari').value    = 0;
     document.getElementById('sign-select').value = '';
     totKamar = totCatering = totMotor = 0;
     calcKamar(); calcCatering(); calcMotor();
     document.getElementById('kamar-satuan').textContent = '—';
-    document.getElementById('sign-name').textContent = '\u00a0';
+    document.getElementById('sign-name').textContent    = '\u00a0';
+    clearSig();
     genInvNumber();
   }
+
+  /* ════════════════════════════════
+     DIGITAL SIGNATURE (Canvas)
+  ════════════════════════════════ */
+  const canvas      = document.getElementById('sigCanvas');
+  const ctx         = canvas.getContext('2d');
+  const placeholder = document.getElementById('sigPlaceholder');
+  let drawing = false;
+  let hasSig  = false;
+
+  /* Retina / devicePixelRatio scaling */
+  (function scaleDPR() {
+    const dpr = window.devicePixelRatio || 1;
+    const w   = canvas.width;
+    const h   = canvas.height;
+    canvas.width  = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width  = w + 'px';
+    canvas.style.height = h + 'px';
+    ctx.scale(dpr, dpr);
+    ctx.strokeStyle = '#1a2744';
+    ctx.lineWidth   = 2;
+    ctx.lineCap     = 'round';
+    ctx.lineJoin    = 'round';
+  })();
+
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const src  = e.touches ? e.touches[0] : e;
+    return {
+      x: src.clientX - rect.left,
+      y: src.clientY - rect.top
+    };
+  }
+
+  function startDraw(e) {
+    e.preventDefault();
+    drawing = true;
+    const p = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+    if (!hasSig) {
+      hasSig = true;
+      placeholder.style.display = 'none';
+    }
+  }
+
+  function draw(e) {
+    if (!drawing) return;
+    e.preventDefault();
+    const p = getPos(e);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+  }
+
+  function stopDraw(e) {
+    if (!drawing) return;
+    e.preventDefault();
+    drawing = false;
+    ctx.beginPath();
+  }
+
+  function clearSig() {
+    const dpr = window.devicePixelRatio || 1;
+    ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+    hasSig = false;
+    placeholder.style.display = '';
+  }
+
+  /* Mouse events */
+  canvas.addEventListener('mousedown',  startDraw);
+  canvas.addEventListener('mousemove',  draw);
+  canvas.addEventListener('mouseup',    stopDraw);
+  canvas.addEventListener('mouseleave', stopDraw);
+
+  /* Touch events */
+  canvas.addEventListener('touchstart', startDraw, { passive: false });
+  canvas.addEventListener('touchmove',  draw,      { passive: false });
+  canvas.addEventListener('touchend',   stopDraw,  { passive: false });
 
   /* ── Init ── */
   updateDate();
