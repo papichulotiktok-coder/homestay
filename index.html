@@ -397,22 +397,113 @@
 
     /* ─────────── PRINT ─────────── */
     @media print {
-      body { background: white; padding: 0; display: block; }
+      @page {
+        size: A4 portrait;
+        margin: 8mm 10mm 8mm 10mm;
+      }
+
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+      html, body {
+        background: white !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: block !important;
+        font-size: 10.5px !important;
+      }
+
       .toolbar, .sig-actions, .sign-name-select, .sig-placeholder { display: none !important; }
-      .invoice { box-shadow: none; max-width: 100%; border-radius: 0; }
-      .inv-body { padding: 16px 24px; }
-      .inv-header { padding: 16px 24px 14px; }
-      .inv-title-bar { padding: 8px 24px; }
-      select, input, textarea {
+
+      .invoice {
+        box-shadow: none !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        border-radius: 0 !important;
+        overflow: visible !important;
+        page-break-inside: avoid;
+      }
+
+      /* Header lebih kompak */
+      .inv-header { padding: 10px 16px 9px !important; gap: 10px !important; }
+      .inv-logo-title { font-size: 16px !important; }
+      .inv-logo-sub   { font-size: 9px !important; }
+      .inv-address, .inv-contacts { font-size: 9.5px !important; line-height: 1.5 !important; }
+      .inv-header-divider { height: 36px !important; }
+
+      /* Title bar */
+      .inv-title-bar { padding: 6px 16px !important; }
+      .inv-title-bar h2 { font-size: 13px !important; }
+      .inv-no { font-size: 10px !important; }
+
+      /* Body */
+      .inv-body { padding: 10px 16px 10px !important; }
+
+      /* Guest grid */
+      .guest-grid {
+        grid-template-columns: 1fr 1fr 1fr !important;
+        gap: 7px !important;
+        padding: 9px 12px !important;
+        margin-bottom: 10px !important;
+      }
+      .guest-field label { font-size: 8.5px !important; margin-bottom: 3px !important; }
+      .guest-field input,
+      .guest-field textarea {
+        font-size: 10px !important;
+        padding: 4px 7px !important;
         border: none !important;
         background: transparent !important;
-        -webkit-appearance: none;
-        appearance: none;
-        resize: none;
+        -webkit-appearance: none; appearance: none;
       }
-      .table-wrap { overflow: visible; }
-      .inv-table { min-width: unset; }
-      .sig-canvas-wrap { border: none; background: transparent; }
+      .guest-field textarea {
+        min-height: 34px !important;
+        resize: none !important;
+        overflow: hidden !important;
+      }
+
+      /* Section label */
+      .section-label { font-size: 8.5px !important; margin-bottom: 6px !important; }
+
+      /* Table */
+      .table-wrap { overflow: visible !important; margin-bottom: 10px !important; }
+      .inv-table { min-width: unset !important; font-size: 10px !important; }
+      .inv-table thead th { padding: 6px 8px !important; font-size: 9px !important; }
+      .inv-table tbody td { padding: 6px 8px !important; }
+      .cell-desc small { font-size: 8.5px !important; }
+      select, .qty-input {
+        font-size: 10px !important;
+        border: none !important;
+        background: transparent !important;
+        -webkit-appearance: none; appearance: none;
+        padding: 2px 4px !important;
+      }
+      .qty-sep { font-size: 9px !important; }
+
+      /* Footer */
+      .inv-footer { gap: 10px !important; padding-top: 4px !important; }
+      .keterangan-box label { font-size: 8.5px !important; }
+      .keterangan-box textarea {
+        min-height: 44px !important;
+        font-size: 10px !important;
+        padding: 5px 8px !important;
+        border: none !important;
+        background: transparent !important;
+        -webkit-appearance: none; appearance: none;
+        resize: none !important;
+      }
+      .total-line { padding: 4px 10px !important; font-size: 10px !important; }
+      .total-line.grand { padding: 6px 10px !important; font-size: 11px !important; margin-top: 4px !important; }
+
+      /* Sign area */
+      .sign-area { margin-top: 12px !important; padding-top: 10px !important; flex-direction: row !important; align-items: flex-end !important; }
+      .sign-place { font-size: 10px !important; }
+      .sign-block { gap: 3px !important; }
+      .sign-title { font-size: 9px !important; }
+      .sig-canvas-wrap { border: none !important; background: transparent !important; }
+      canvas { width: 160px !important; height: 60px !important; }
+      .sign-name { font-size: 10px !important; }
+
+      /* Bottom note */
+      .inv-note { font-size: 9.5px !important; padding: 7px 16px !important; margin-top: 10px !important; }
     }
   </style>
 </head>
