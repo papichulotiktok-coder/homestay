@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Invoice – Homestay & Kos RQ</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     /* ── CSS Variables ── */
     :root {
@@ -57,9 +58,12 @@
     }
     .btn-print { background: var(--navy); color: var(--white); }
     .btn-print:hover { background: var(--navy-mid); transform: translateY(-1px); }
+    .btn-cetak { background: #3a5a9a; color: var(--white); }
+    .btn-cetak:hover { background: #4a6aaa; transform: translateY(-1px); }
     .btn-reset { background: var(--white); color: var(--navy); border: 1.5px solid var(--border) !important; }
     .btn-reset:hover { background: var(--light); }
     .toolbar-note { font-size: 12px; color: var(--muted); flex: 1 1 100%; }
+    .btn-print:disabled { opacity: .6; cursor: not-allowed; transform: none; }
 
     /* ── Invoice Sheet ── */
     .invoice {
@@ -398,14 +402,20 @@
     /* ─────────── PRINT ─────────── */
     @media print {
       @page {
-        margin: 0;
+        margin: 8mm 10mm;
+        /* Hapus header/footer bawaan browser (URL, tanggal, dll) */
+        -webkit-print-header: none;
+        -webkit-print-footer: none;
       }
+      @page :first { margin-top: 8mm; }
+      @page :left  { margin: 8mm 10mm; }
+      @page :right { margin: 8mm 10mm; }
 
       * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
       html, body {
         background: white !important;
-        padding: 8mm 10mm !important;
+        padding: 0 !important;
         margin: 0 !important;
         display: block !important;
         font-size: 10.5px !important;
@@ -510,9 +520,10 @@
 
 <!-- ── Toolbar ── -->
 <div class="toolbar no-print">
-  <button class="btn-print" onclick="window.print()">🖨️ &nbsp;Cetak / Export PDF</button>
+  <button class="btn-print" onclick="exportPDF()">📄 &nbsp;Export PDF</button>
+  <button class="btn-cetak" onclick="window.print()">🖨️ &nbsp;Cetak</button>
   <button class="btn-reset" onclick="resetForm()">↺ &nbsp;Reset Form</button>
-  <span class="toolbar-note">Tip: Pilih "Save as PDF" di dialog cetak untuk export PDF</span>
+  <span class="toolbar-note">Gunakan "Export PDF" untuk hasil tanpa URL/header browser</span>
 </div>
 
 <!-- ── Invoice Sheet ── -->
@@ -930,6 +941,50 @@
   canvas.addEventListener('touchstart', startDraw, { passive: false });
   canvas.addEventListener('touchmove',  draw,      { passive: false });
   canvas.addEventListener('touchend',   stopDraw,  { passive: false });
+
+  /* ── Export PDF via html2pdf ── */
+  function exportPDF() {
+    const btn = document.querySelector('.btn-print');
+    btn.disabled = true;
+    btn.textContent = '⏳  Generating…';
+
+    const nama   = (document.getElementById('g-nama').value || '').trim();
+    const invNum = document.getElementById('inv-num-val').textContent || '';
+    const filename = nama
+      ? `RQ-${invNum}-${nama}.pdf`
+      : `RQ-${invNum}.pdf`;
+
+    const element = document.getElementById('invoice');
+
+    /* Sembunyikan elemen yg tidak perlu di PDF */
+    const hideSelectors = ['.sig-actions', '.sign-name-select', '.sig-placeholder'];
+    const hidden = hideSelectors.map(sel => {
+      const els = element.querySelectorAll(sel);
+      els.forEach(el => { el.dataset._prevDisplay = el.style.display; el.style.display = 'none'; });
+      return els;
+    }).flat();
+
+    html2pdf()
+      .set({
+        margin:        [8, 10, 8, 10],   /* mm: top right bottom left */
+        filename:      filename,
+        image:         { type: 'jpeg', quality: 0.98 },
+        html2canvas:   { scale: 2, useCORS: true, logging: false },
+        jsPDF:         { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak:     { mode: ['avoid-all'] }
+      })
+      .from(element)
+      .save()
+      .then(() => {
+        /* Restore elemen tersembunyi */
+        hidden.forEach(el => {
+          el.style.display = el.dataset._prevDisplay || '';
+          delete el.dataset._prevDisplay;
+        });
+        btn.disabled = false;
+        btn.innerHTML = '📄 &nbsp;Export PDF';
+      });
+  }
 
   /* ── Init ── */
   updateDate();
