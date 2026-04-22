@@ -398,15 +398,14 @@
     /* ─────────── PRINT ─────────── */
     @media print {
       @page {
-        size: A4 portrait;
-        margin: 8mm 10mm 8mm 10mm;
+        margin: 0;
       }
 
       * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
       html, body {
         background: white !important;
-        padding: 0 !important;
+        padding: 8mm 10mm !important;
         margin: 0 !important;
         display: block !important;
         font-size: 10.5px !important;
@@ -812,7 +811,23 @@
     const mm  = String(d.getMonth()+1).padStart(2,'0');
     const rnd = String(Math.floor(Math.random()*900)+100);
     document.getElementById('inv-num-val').textContent = `${yy}${mm}-${rnd}`;
+    updateDocTitle();
   }
+
+  /* ── Dynamic PDF filename ── */
+  function updateDocTitle() {
+    const nama    = (document.getElementById('g-nama').value || '').trim();
+    const invNum  = document.getElementById('inv-num-val').textContent || '';
+    const invFull = 'RQ-' + invNum;
+    if (nama) {
+      document.title = invFull + '-' + nama;
+    } else {
+      document.title = invFull;
+    }
+  }
+
+  /* Attach to nama input */
+  document.getElementById('g-nama').addEventListener('input', updateDocTitle);
 
   /* ── Reset ── */
   function resetForm() {
@@ -919,6 +934,7 @@
   /* ── Init ── */
   updateDate();
   genInvNumber();
+  updateDocTitle();
 </script>
 </body>
 </html>
