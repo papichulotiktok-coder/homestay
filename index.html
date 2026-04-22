@@ -58,10 +58,13 @@
     }
     .btn-print { background: var(--navy); color: var(--white); }
     .btn-print:not(:disabled):hover { background: var(--navy-mid); transform: translateY(-1px); }
+    .btn-export { background: var(--gold); color: var(--navy); }
+    .btn-export:not(:disabled):hover { background: var(--gold-light); transform: translateY(-1px); }
     .btn-reset { background: var(--white); color: var(--navy); border: 1.5px solid var(--border) !important; }
     .btn-reset:hover { background: var(--light); }
     .toolbar-note { font-size: 12px; color: var(--muted); flex: 1 1 100%; }
-    .btn-print:disabled { opacity: .45; cursor: not-allowed; transform: none !important; }
+    .btn-print:disabled,
+    .btn-export:disabled { opacity: .45; cursor: not-allowed; transform: none !important; }
 
     /* ── Invoice Sheet ── */
     .invoice {
@@ -708,7 +711,7 @@
       <!-- Kanan: tanda tangan digital -->
       <div class="sign-block">
         <div class="sign-title">Hormat Kami,</div>
-        <select class="sign-name-select" id="sign-select" onchange="updateSigner()">
+        <select class="sign-name-select" id="sign-select">
           <option value="">— Pilih Penanda Tangan —</option>
           <option value="Herminingsih">Herminingsih</option>
           <option value="Achmad Tojali">Achmad Tojali</option>
@@ -920,6 +923,7 @@
     e.preventDefault();
     drawing = false;
     ctx.beginPath();
+    checkReady();
   }
 
   function clearSig() {
@@ -927,6 +931,7 @@
     ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
     hasSig = false;
     placeholder.style.display = '';
+    checkReady();
   }
 
   /* Mouse events */
@@ -949,18 +954,29 @@
     const checkout= document.getElementById('g-checkout').value;
     const paket   = document.getElementById('kamar-paket').value;
     const malam   = parseFloat(document.getElementById('kamar-malam').value) || 0;
+    const unit    = parseFloat(document.getElementById('kamar-unit').value) || 0;
+    const signer  = document.getElementById('sign-select').value;
 
-    const ready = nama && hp && alamat && checkin && checkout && paket && malam > 0;
+    const missingList = [];
+    if (!nama || !hp || !alamat || !checkin || !checkout)
+      missingList.push('informasi tamu');
+    if (!paket || malam < 1 || unit < 1)
+      missingList.push('sewa kamar (min. 1 malam & 1 kamar)');
+    if (!signer)
+      missingList.push('penandatangan');
+    if (!hasSig)
+      missingList.push('tanda tangan');
 
-    const btn  = document.getElementById('btn-cetak');
-    const note = document.getElementById('toolbar-note');
+    const ready = missingList.length === 0;
+    const btn   = document.getElementById('btn-cetak');
+    const note  = document.getElementById('toolbar-note');
     btn.disabled = !ready;
 
     if (ready) {
-      note.textContent = 'Siap dicetak / di-export PDF. Pilih "Save as PDF" di dialog cetak.';
+      note.textContent = '✓ Siap dicetak / di-export PDF. Pilih "Save as PDF" di dialog cetak.';
       note.style.color = 'var(--green)';
     } else {
-      note.textContent = 'Lengkapi informasi tamu & sewa kamar untuk mengaktifkan tombol cetak.';
+      note.textContent = 'Belum lengkap: ' + missingList.join(', ') + '.';
       note.style.color = 'var(--muted)';
     }
   }
@@ -973,6 +989,7 @@
   document.getElementById('kamar-paket').addEventListener('change', () => { calcKamar(); checkReady(); });
   document.getElementById('kamar-malam').addEventListener('input',  () => { calcKamar(); checkReady(); });
   document.getElementById('kamar-unit').addEventListener('input',   () => { calcKamar(); checkReady(); });
+  document.getElementById('sign-select').addEventListener('change', () => { updateSigner(); checkReady(); });
 
   /* ── Init ── */
   updateDate();
