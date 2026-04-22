@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Invoice – Homestay & Kos RQ</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet"/>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     /* ── CSS Variables ── */
     :root {
@@ -59,8 +57,6 @@
     }
     .btn-print { background: var(--navy); color: var(--white); }
     .btn-print:hover { background: var(--navy-mid); transform: translateY(-1px); }
-    .btn-cetak { background: #3a5a9a; color: var(--white); }
-    .btn-cetak:hover { background: #4a6aaa; transform: translateY(-1px); }
     .btn-reset { background: var(--white); color: var(--navy); border: 1.5px solid var(--border) !important; }
     .btn-reset:hover { background: var(--light); }
     .toolbar-note { font-size: 12px; color: var(--muted); flex: 1 1 100%; }
@@ -521,10 +517,9 @@
 
 <!-- ── Toolbar ── -->
 <div class="toolbar no-print">
-  <button class="btn-print" onclick="exportPDF()">📄 &nbsp;Export PDF</button>
-  <button class="btn-cetak" onclick="window.print()">🖨️ &nbsp;Cetak</button>
+  <button class="btn-print" onclick="window.print()">🖨️ &nbsp;Cetak / Export PDF</button>
   <button class="btn-reset" onclick="resetForm()">↺ &nbsp;Reset Form</button>
-  <span class="toolbar-note">Gunakan "Export PDF" untuk hasil tanpa URL/header browser</span>
+  <span class="toolbar-note">Tip: Pilih "Save as PDF" di dialog cetak untuk export PDF</span>
 </div>
 
 <!-- ── Invoice Sheet ── -->
@@ -942,64 +937,6 @@
   canvas.addEventListener('touchstart', startDraw, { passive: false });
   canvas.addEventListener('touchmove',  draw,      { passive: false });
   canvas.addEventListener('touchend',   stopDraw,  { passive: false });
-
-  /* ── Export PDF via html2pdf (1 halaman, tinggi mengikuti konten) ── */
-  function exportPDF() {
-    const btn = document.querySelector('.btn-print');
-    btn.disabled = true;
-    btn.innerHTML = '⏳ &nbsp;Generating…';
-
-    const nama   = (document.getElementById('g-nama').value || '').trim();
-    const invNum = document.getElementById('inv-num-val').textContent || '';
-    const filename = nama ? `RQ-${invNum}-${nama}.pdf` : `RQ-${invNum}.pdf`;
-
-    const element = document.getElementById('invoice');
-
-    /* Sembunyikan elemen yang tidak perlu di PDF */
-    const hideSelectors = ['.sig-actions', '.sign-name-select', '.sig-placeholder'];
-    const hidden = hideSelectors.map(sel => {
-      const els = element.querySelectorAll(sel);
-      els.forEach(el => { el.dataset._prevDisplay = el.style.display; el.style.display = 'none'; });
-      return Array.from(els);
-    }).flat();
-
-    const marginMm      = 10;
-    const pageWidthMm   = 210;
-    const contentWidthMm = pageWidthMm - marginMm * 2;
-    const scale         = 2;
-
-    html2canvas(element, {
-      scale: scale,
-      useCORS: true,
-      logging: false,
-      backgroundColor: '#ffffff'
-    }).then(canvas => {
-      /* Hitung tinggi halaman agar pas konten — tidak terpotong */
-      const pxPerMm        = (canvas.width / scale) / contentWidthMm;
-      const contentHeightMm = (canvas.height / scale) / pxPerMm;
-      const pageHeightMm   = contentHeightMm + marginMm * 2;
-
-      const imgData = canvas.toDataURL('image/jpeg', 0.98);
-
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({
-        unit:        'mm',
-        format:      [pageWidthMm, pageHeightMm],
-        orientation: 'portrait'
-      });
-
-      doc.addImage(imgData, 'JPEG', marginMm, marginMm, contentWidthMm, contentHeightMm);
-      doc.save(filename);
-
-      /* Restore elemen tersembunyi */
-      hidden.forEach(el => {
-        el.style.display = el.dataset._prevDisplay || '';
-        delete el.dataset._prevDisplay;
-      });
-      btn.disabled = false;
-      btn.innerHTML = '📄 &nbsp;Export PDF';
-    });
-  }
 
   /* ── Init ── */
   updateDate();
