@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Invoice – Homestay & Kos RQ</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     /* ── CSS Variables ── */
     :root {
@@ -56,11 +57,11 @@
       transition: all .2s;
     }
     .btn-print { background: var(--navy); color: var(--white); }
-    .btn-print:hover { background: var(--navy-mid); transform: translateY(-1px); }
+    .btn-print:not(:disabled):hover { background: var(--navy-mid); transform: translateY(-1px); }
     .btn-reset { background: var(--white); color: var(--navy); border: 1.5px solid var(--border) !important; }
     .btn-reset:hover { background: var(--light); }
     .toolbar-note { font-size: 12px; color: var(--muted); flex: 1 1 100%; }
-    .btn-print:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+    .btn-print:disabled { opacity: .45; cursor: not-allowed; transform: none !important; }
 
     /* ── Invoice Sheet ── */
     .invoice {
@@ -517,9 +518,9 @@
 
 <!-- ── Toolbar ── -->
 <div class="toolbar no-print">
-  <button class="btn-print" onclick="window.print()">🖨️ &nbsp;Cetak / Export PDF</button>
+  <button class="btn-print" id="btn-cetak" onclick="window.print()" disabled>🖨️ &nbsp;Cetak / Export PDF</button>
   <button class="btn-reset" onclick="resetForm()">↺ &nbsp;Reset Form</button>
-  <span class="toolbar-note">Tip: Pilih "Save as PDF" di dialog cetak untuk export PDF</span>
+  <span class="toolbar-note" id="toolbar-note">Lengkapi informasi tamu &amp; sewa kamar untuk mengaktifkan tombol cetak.</span>
 </div>
 
 <!-- ── Invoice Sheet ── -->
@@ -794,6 +795,7 @@
       if (diff > 0) {
         document.getElementById('kamar-malam').value = diff;
         calcKamar();
+        checkReady();
       }
     }
   }
@@ -938,10 +940,45 @@
   canvas.addEventListener('touchmove',  draw,      { passive: false });
   canvas.addEventListener('touchend',   stopDraw,  { passive: false });
 
+  /* ── Validasi: aktifkan tombol cetak ── */
+  function checkReady() {
+    const nama    = document.getElementById('g-nama').value.trim();
+    const hp      = document.getElementById('g-hp').value.trim();
+    const alamat  = document.getElementById('g-alamat').value.trim();
+    const checkin = document.getElementById('g-checkin').value;
+    const checkout= document.getElementById('g-checkout').value;
+    const paket   = document.getElementById('kamar-paket').value;
+    const malam   = parseFloat(document.getElementById('kamar-malam').value) || 0;
+
+    const ready = nama && hp && alamat && checkin && checkout && paket && malam > 0;
+
+    const btn  = document.getElementById('btn-cetak');
+    const note = document.getElementById('toolbar-note');
+    btn.disabled = !ready;
+
+    if (ready) {
+      note.textContent = 'Siap dicetak / di-export PDF. Pilih "Save as PDF" di dialog cetak.';
+      note.style.color = 'var(--green)';
+    } else {
+      note.textContent = 'Lengkapi informasi tamu & sewa kamar untuk mengaktifkan tombol cetak.';
+      note.style.color = 'var(--muted)';
+    }
+  }
+
+  /* Pasang listener ke semua field yang divalidasi */
+  ['g-nama','g-hp','g-alamat','g-checkin','g-checkout'].forEach(id => {
+    document.getElementById(id).addEventListener('input', checkReady);
+    document.getElementById(id).addEventListener('change', checkReady);
+  });
+  document.getElementById('kamar-paket').addEventListener('change', () => { calcKamar(); checkReady(); });
+  document.getElementById('kamar-malam').addEventListener('input',  () => { calcKamar(); checkReady(); });
+  document.getElementById('kamar-unit').addEventListener('input',   () => { calcKamar(); checkReady(); });
+
   /* ── Init ── */
   updateDate();
   genInvNumber();
   updateDocTitle();
+  checkReady();
 </script>
 </body>
 </html>
